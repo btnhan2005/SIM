@@ -7,6 +7,7 @@ nSym = 100; % Số lượng symbol
 nfft = 128; % Kích thước IFFT (số sóng mang con)
 cplen = 16;
 dataIn = randi([0 1], k * nSym * nfft, 1); %% Sinh dãy bit ngẫu nhiên
+SNR_dB = 0;
 %% 64QAM
 demical = bit2int(dataIn, k);   %% Converts n column-wise bit elements in dataIn to integer values
 qamSig = qammod(demical, M, 'UnitAveragePower',true); %% 64QAM
@@ -152,3 +153,5 @@ h2 = H_fit(1, 2);
 rx_no_noise = h1 .* ofdmTx1 + h2 .* ofdmTx2;
 noise = sqrt(sigma2/2) * (randn(size(rx_no_noise)) + 1i*randn(size(rx_no_noise)));
 Rx = rx_no_noise + noise;
+%% MMSE Equalization
+Rx_equal = MMSE_Equalization(Rx, H_fit, SNR_dB, Pt);
